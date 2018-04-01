@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>登录</title>
+<!-- <link href="css/login.css" rel="stylesheet" type="text/css"/> -->
+<script src="/oa/js/jquery-1.7.2.min.js"></script>
+<style type="text/css">
+	.divcontains{		
+		width:600px;
+		margin:200px auto;
+	}	
+	.divleft{		
+		border:#006 solid 1px;
+		border-radius:3px;
+		text-align:right;
+		line-height:35px;
+		height:35px;
+		float:left;
+		width:100px;
+	}	
+	.divright{		
+		border:#006 solid 1px;
+		border-radius:3px;
+		text-align:left;
+		line-height:35px;
+		height:35px;
+		float:left;
+		width:450px;
+	}	
+	.textclass{
+		border:none;
+		width:300px;
+		margin:2px 0 0 5px;
+		height:30px;
+	}
+	body{
+		background:rgba(0,0,0,0.2);
+	}
+	.heading{
+		height:70px;
+		background:url("/oa/image/cctv.png") no-repeat left;
+		border-bottom:3px solid brown;
+	}
+
+</style>
+</head>
+<body>
+	<div class="heading">
+		<div class="restart">
+			
+		</div>
+		<div class="sth">
+		</div>
+	</div>
+	<form id="f1" action="login" method="post" accept-charset="utf-8">
+		<div class="divcontains">
+       	<div class="divleft">用户名：</div>
+        <div class="divright"><input type="text" name="loginname" id="loginname" class="textclass"/></div>
+        <div class="divleft">密   码：</div>
+        <div class="divright"><input type="password" name="loginpass" id="loginpass" class="textclass"/></div>
+        <div class="divleft"></div>
+        <div class="divright"><input id="submit" type="submit" value="登录" name="sub" class="textclass"/>
+        <a href="/oa/user/registerShow" >注册</a></div> 
+		</div>
+    </form>
+    <br />
+</body>
+<script>
+</script>
+</html>
