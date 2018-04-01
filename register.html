@@ -1,0 +1,416 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+
+<title>注册</title>
+
+<style type="text/css">
+
+	.divcontains{
+		width:700px;
+		height:100px;
+		margin:100px auto;
+	}
+	
+	.divleft{
+		border:#006 solid 1px;
+		border-radius:3px;
+		text-align:right;
+		line-height:35px;
+		height:35px;
+		float:left;
+		width:100px;
+	}
+	
+	.divright{
+		border:#006 solid 1px;
+		border-radius:3px;
+		text-align:left;
+		line-height:35px;
+		height:35px;
+		float:left;
+		width:590px;
+	}
+
+	
+	.textclass{
+		border:none;
+		width:200px;
+		margin:2px 0 0 5px;
+		height:30px;
+	}
+	
+	.imgclass{
+		width:20px;
+		height:20px;
+		margin: 7px 0 0 10px;
+	}
+	
+	#verifyCode{
+		width:120px
+		height:60px;
+		border:none;
+		margin:0 50px 0 5px;
+		
+	}
+	
+	#verifyimg{
+		widt:100px;
+		height:30px;
+		margin: 0px 10px 0 10px;
+	}
+	
+	#button1{
+		width:100px;
+	}
+	
+	#info{
+		color:red;
+		font-size:8px;
+	}
+	
+	#info0{
+		color:red;
+		font-size:8px;
+	}
+	#info1{
+		color:red;
+		font-size:8px;
+	}
+	#p{
+		display: none;
+	}
+	#c{
+		display: none;
+	}
+	#d{
+		display: none;
+	}
+	#headimg{
+		width:150px;
+		height:150px;
+		position:relative;
+		left:-150px;
+		top:-150px;
+		display:none;
+	}
+	select{
+		margin:7px 0 0 20px;
+		width:150px;
+	}
+	
+	#file{
+		width:150px;
+		margin:0 20px 0 10px;
+	}
+	
+	body{
+		background:rgba(0,0,0,0.2);
+	}
+	.heading{
+		height:70px;
+		background:url("/oa/image/cctv.png") no-repeat left;
+		border-bottom:3px solid brown;
+	}
+	
+	
+</style>
+
+<script src="/oa/js/jquery-1.7.2.min.js"></script>
+<script src="/oa/js/FilePreview.js"></script>
+<script src="/oa/js/CookieOpr.js"></script>
+<script src="/oa/js/CityData.js"></script>
+</head>
+
+<body>
+	<div class="heading">
+		<div class="restart">
+			
+		</div>
+		<div class="sth">
+		</div>
+	</div>
+	<form action="register" method="post" accept-charset="utf-8" enctype="multipart/form-data">
+    <div class="divcontains">
+    	<h1 style="text-align:center">注册</h1>
+       	<div class="divleft">用户名：</div>
+        <div class="divright"><input id="loginname" type="text" name="loginname" class="textclass" style=""/><img id="userimg" class="imgclass" /><span name="info" id="info"></span></div>
+        <div class="divleft">密码：</div>
+        <div class="divright"><input type="password" name="loginpass" id="loginpass" class="textclass"/><span name="info0" id="info0"></span></div>
+        <div class="divleft">确认密码：</div>
+        <div class="divright"><input type="password" id="loginpassrepeat" name="loginpassrepeat" class="textclass"/><span name="info1" id="info1"></span></div>
+        <div class="divleft">所在地：</div>
+        <div class="divright">
+        	<select name="province" id="province"><option value="-1">请选择省份</option></select>
+        	<input name="p" id="p" type="text"/>
+        	<select name="city" id="city"><option value="-1">请选择城市</option></select>
+        	<input name="c" id="c" type="text"/>
+        	<select name="district" id="district"><option value="-1">请选择区县</option></select>
+        	<input name="d" id="d" type="text"/>
+        </div>
+        <div class="divleft">头像：</div>
+		<div class="divright"><input type="file" id="file" name="file" /><a id="apreview" href="#">预览</a><span name="info2" id="info2"></div>        
+		<div class="divleft">验证码：</div>
+        <div class="divright"><input type="text" name="verifycode" id="verifyCode"/><img id="verifyimg" src="http://localhost:8080/oa/user/verifyCode"/><a href="#" id="verifya">看不清</a><img id="vcimg" class="imgclass" /></div>
+        <div class="divleft"></div>
+        <div class="divright"><input type="submit" value="注册" class="textclass"/><a href="http://localhost:8080/oa/user/loginShow">返回登录页面</a></div>
+   		<img id="headimg" />
+    </div>
+    </form>
+</body>
+<script>
+	var userimg=$("#userimg");
+	var vcimg=$("#vcimg");
+	var verifyimg=$("#verifyimg");
+	var verifya=$("#verifya");
+	var smt = $(".divright").find("input[type='submit']");
+	var verifyCode = $("#verifyCode");
+	var file = $("#file");
+	var uidrex = /^[a-zA-Z][a-zA-Z0-9_]{3,14}$/;
+	var qualified1 = false;
+	var qualified2 = false;
+	var qualified3 = false;
+	var qualified4 = false;
+	var qualified5 = false;
+	
+	vcimg.hide();
+	userimg.hide();
+	verifyimg.attr("src","http://localhost:8080/oa/verifyCode/verifyCode");
+	smt.attr("disabled","disabled");
+	
+	$("#loginname").keyup(function(){
+		var userid=$(this);
+		//发起ajax请求
+		if(uidrex.test($(this).val())){
+			$.ajax({
+				type:"post",
+				url:"/oa/user/check",
+				data:{loginname:userid.val()},
+				success:function(result){
+					if(result=="1"){
+						qualified1 = true;
+						userimg.fadeIn(500);
+						$("#info").text("该用户名可用");
+						$("#info").attr("style","color:green");
+						userimg.attr("src","/oa/image/right.jpg");
+					}else{
+						qualified1 = false;
+						userimg.fadeIn(500);
+						$("#info").text("该用户名已被占用");
+						$("#info").attr("style","color:red");
+						userimg.attr("src","/oa/image/error.jpg");
+					}
+				}
+			});
+			if(qualified2&&qualified3&&qualified4&&qualified5){
+				smt.attr("disabled",false);
+			}
+		}else{
+			$("#info").text("用户名必须为长度4到15的字母+[字母/数字]");
+			$("#info").attr("style","color:red");
+			qualified1 = false;
+			userimg.attr("src","/oa/image/error.jpg");
+			userimg.fadeIn(500);
+			smt.attr("disabled",true);
+		}
+	});
+	
+	$("#loginname").blur(function(){
+		var userid=$(this);
+		//发起ajax请求
+		if(uidrex.test($(this).val())){
+			$.ajax({
+				type:"post",
+				url:"/oa/user/check",
+				data:{loginname:userid.val()},
+				success:function(result){
+					if(result=="1"){
+						qualified1 = true;
+						userimg.fadeIn(500);
+						$("#info").text("该用户名可用");
+						$("#info").attr("style","color:green");
+						userimg.attr("src","/oa/image/right.jpg");
+					}else{
+						qualified1 = false;
+						userimg.fadeIn(500);
+						$("#info").text("该用户名已被占用");
+						$("#info").attr("style","color:red");
+						userimg.attr("src","/oa/image/error.jpg");
+					}
+				}
+			});
+			if(qualified2&&qualified3&&qualified4&&qualified5){
+				smt.attr("disabled",false);
+			}
+		}else{
+			$("#info").text("用户名必须为长度4到15的字母+[字母/数字]");
+			$("#info").attr("style","color:red");
+			qualified1 = false;
+			userimg.attr("src","/oa/image/error.jpg");
+			userimg.fadeIn(500);
+			smt.attr("disabled",true);
+		}
+	});
+	
+	$("#loginpass").blur(function(){
+		var userpw=$(this);
+		if($(this).val().trim()!=""){
+			$("#info0").text("可用");
+			$("#info0").attr("style","color:green");
+			qualified4 = true;
+			if(qualified2&&qualified1&&qualified3&&qualified5){
+				smt.attr("disabled",false);
+			}
+		}else{
+			$("#info0").text("密码不可为空");
+			$("#info0").attr("style","color:red");
+			qualified4 = false;
+			smt.attr("disabled",true);
+		}
+	});
+	
+	file.change(function(){
+		var userimg=$(this);
+		if($(this).val().trim()!=""){
+			$("#info2").text("有头像啦");
+			$("#info2").attr("style","color:green");
+			qualified5 = true;
+			if(qualified2&&qualified1&&qualified3&&qualified4){
+				smt.attr("disabled",false);
+			}
+		}else{
+			$("#info2").text("头像不可为空");
+			$("#info2").attr("style","color:red");
+			qualified5 = false;
+			smt.attr("disabled",true);
+		}
+	});
+	
+	$("#loginpassrepeat").blur(function(){
+		var userid=$(this);
+		//发起ajax请求
+		if($(this).val()==$("#loginpass").val()){
+			$("#info1").text("");
+			qualified3 = true;
+			if(qualified2&&qualified1&&qualified4&&qualified5){
+				smt.attr("disabled",false);
+			}
+		}else{
+			$("#info1").text("必须与密码一致");
+			qualified3 = false;
+			smt.attr("disabled",true);
+		}
+	});
+	
+	$("#loginpassrepeat").keyup(function(){
+		var userid=$(this);
+		//发起ajax请求
+		if($(this).val()==$("#loginpass").val()){
+			$("#info1").text("");
+			qualified3 = true;
+			if(qualified2&&qualified1&&qualified4&&qualified5){
+				smt.attr("disabled",false);
+			}
+		}else{
+			$("#info1").text("必须与密码一致");
+			qualified3 = false;
+			smt.attr("disabled",true);
+		}
+	});
+	
+	$("#verifyCode").keyup(function(){
+		//发起ajax请求
+		if($(this).val().trim() !=""){
+			$.ajax({
+				type:"post",
+				url:"/oa/verifyCode/checkVC",
+				data:{vc:$("#verifyCode").val()},
+				success:function(result){
+					if(result=="1"){
+						$("#vcimg").attr("src","/oa/image/right.jpg");
+						$("#vcimg").show();
+						qualified2 = true;
+						if(qualified1&&qualified3&&qualified4&&qualified5){
+							smt.attr("disabled",false);
+						}
+					}else{
+						$("#vcimg").attr("src","/oa/image/error.jpg");
+						$("#vcimg").show();
+						qualified2 = false;
+						smt.attr("disabled",true);
+					}
+				}
+			});
+		}else{
+			$("#vcimg").attr("src","/oa/image/error.jpg");
+			$("#vcimg").show();
+			qualified2 = false;
+			smt.attr("disabled",true);
+		}
+	});
+	
+	verifya.click(function(){
+		verifyimg.attr("src","http://localhost:8080/oa/verifyCode/verifyCode?random="+Math.random());
+	});
+	
+	$("#file").change(function(){
+		var url=getFileUrl("file");
+		$("#headimg").attr("src",url);
+	});
+	
+	$("#apreview").mouseover(function(){
+		if($("#file").val()!=""){
+			url=getFileUrl("file");
+			$("#headimg").attr("src",url).fadeIn(500);
+		}
+	});
+	
+	$("#apreview").mouseout(function(){
+		$("#headimg").fadeOut(500);
+	});
+	var p = "";
+	var c = "";
+	var d = "";
+	$(pro).each(function(index,content){
+		var tempcontent=$("<option value=\""+content.id+"\">"+content.name+"</option>");
+		$("#province").append(tempcontent);
+	})
+	
+	$("#province").change(function(){
+		$("#city").find("option[value!=-1]").remove();
+		$("#district").find("option[value!=-1]").remove();
+		var proid=$(this).val();
+		p = $(this).find("option:selected").text();
+		$(city).each(function(index,content){
+			if(proid==content.par)
+			{
+				var tempcontent=$("<option value=\""+content.id+"\">"+content.name+"</option>");
+				$("#city").append(tempcontent);
+			}
+		})
+		$("#p").attr("value",p);
+	})
+	
+	$("#city").change(function(){
+		$("#district").find("option[value!=-1]").remove();
+		var cityid=$(this).val();
+		c = $(this).find("option:selected").text();
+		$(region).each(function(index,content){
+			if(cityid==content.par){
+				var tempcontent=$("<option value=\""+content.id+"\">"+content.name+"</option>");
+				$("#district").append(tempcontent);
+			}
+		})
+		$("#c").attr("value",c);
+	})
+	
+	$("#district").change(function(){
+		d = $(this).find("option:selected").text();
+		$("#d").attr("value",d);
+	})
+	
+</script>
+</html>
+
